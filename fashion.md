@@ -1,16 +1,35 @@
 # Multimodal Fashion & Context Retrieval — Execution Plan v2
 
 **Architecture: Grounded Axis-Decomposed Retrieval (G-ADR)**
-Region-grounded attribute binding + soft-label axis embeddings + two-stage retrieve-and-rerank.
+Region-grounded attribute binding + vocabulary-distribution axis vectors + two-stage retrieve-and-rerank.
 
-> **What changed from v1 (the ADR-global draft) and why.** v1's axis decomposition is the right skeleton, but as
-> specified it did not actually deliver the thing it claimed to deliver. Five exposures, all fixed here:
+> **How I arrived here — my own design evolution.** This architecture is the result of iterating
+> on my *own* earlier attempts, not a first guess. The progression:
 >
-> | # | Exposure in v1 | Fix in v2 |
+> - **Naive first tries.** I started where anyone would: vanilla CLIP (embed image + query, rank by
+>   cosine), then a fashion-tuned CLIP, then a caption-and-match idea (caption each image, match
+>   text-to-text). All three pool everything into a single vector, so they behave as a bag of words and
+>   cannot separate *"red tie + white shirt"* from its swap. I ruled them out on exactly the
+>   compositional case the assignment targets.
+>
+> - **v1 — ADR-global (my first real architecture).** My first genuine design *decomposed* the image
+>   onto separate axes: run CLIP zero-shot classification per axis and store **one global label per axis
+>   per image** — `{color: blue, garment: shirt, scene: office}`. This was a real step up over the naive
+>   tries: isolating the axes let me weight them, drop the ones a query never mentions, and stop one
+>   attribute from masking another. It handles single-attribute and scene queries well.
+>
+> - **What my own testing then exposed in v1 — and why I built v2 (this document, G-ADR).** Decomposing
+>   an image into axes is **not** the same as binding attributes to garments. Because each axis was stored
+>   *globally* — one colour for the whole image — `color=blue` was never tied to the shirt vs the pants,
+>   so v1 was **exactly as broken as vanilla CLIP on the very compositional query it was meant to fix.**
+>   The single fix is region-grounding: measure each attribute from its *own garment's pixels*. Five
+>   concrete shortcomings I found in my v1, each addressed in this version:
+>
+> | # | What I found wrong in my v1 (ADR-global) | Fix in v2 (G-ADR) |
 > |---|---|---|
 > | 1 | **Compositional binding was asserted, not built.** The indexer ran *global* CLIP zero-shot color classification and stored **one** color label per image, unbound to any garment. Nothing tied `color=blue` to the shirt rather than the pants. "Red shirt + blue pants" and "blue shirt + red pants" would produce near-identical index entries — the exact failure ADR was supposed to fix. Region-grounding, the component that actually creates binding, was deferred to "future work." | **Region-grounding moves into v1** (§3). Attributes are extracted *per garment region*, so `(garment, color, pattern)` are bound in a slot. This is now the contribution, not a stretch goal. |
 > | 2 | **No baseline, no metric.** The assignment grades on "better than vanilla CLIP," but v1 never compared against vanilla CLIP and defined no number. Five hand-eyeballed queries prove nothing. | **A measured evaluation is a first-class deliverable** (§6): vanilla CLIP + FashionCLIP baselines, a labeled relevance set, Recall@k / P@k / nDCG@10, and a purpose-built **compositional swap test** that isolates binding accuracy. |
-> | 3 | **Hard labels destroyed the ranking signal.** Each image's color axis collapsed to one of ~18 label strings → one of ~18 distinct MiniLM vectors. Hundreds of images share a byte-identical vector; "search" over that axis is a lookup with massive ties, and only the 0.15 visual term breaks them. v1 said it kept the softmax distribution, then never used it. | **Soft-label expectation embeddings** (§3.3): each axis vector is the probability-weighted mean of its vocabulary's label embeddings. Graded, tie-free, same storage cost, no extra models. |
+> | 3 | **Hard labels destroyed the ranking signal.** Each image's color axis collapsed to one of ~18 label strings → one of ~18 distinct MiniLM vectors. Hundreds of images share a byte-identical vector; "search" over that axis is a lookup with massive ties, and only the 0.15 visual term breaks them. v1 said it kept the softmax distribution, then never used it. | **Graded soft signal, kept** (§3.3): scene/vibe as soft-label embeddings, and the slot axes (colour/pattern/category) as **probability distributions over the vocabulary** — after I found the SBERT version collapsed similar values (red≈white). Graded, tie-free, sharp. |
 > | 4 | **Dataset fit was assumed.** The eval queries need offices, park benches, and city streets. Fashionpedia is largely runway / product / street-style photography. If `scene` is near-degenerate, three of the five queries have nothing to retrieve. | **Phase 0 audit — now RUN, and it fired** (§2). Fashionpedia is 77% runway+studio with **5 office images**. Corpus is Fashionpedia + a CLIP-verified COCO scene supplement. |
 > | 5 | **Two hand-waves.** The BLIP fallback said "extract the axis value from the caption" without saying how; the 0.35 confidence threshold was asserted, not derived. | Fallback is a **VQA call on the region crop** with a constrained answer set (§3.5); the threshold is **calibrated** on a labeled subset, using normalized entropy rather than a raw top-1 score. |
 >
@@ -202,29 +221,27 @@ For each region crop, and for each global axis, run CLIP zero-shot against a per
 | `scene` | `"a photo taken in a {scene}"` | ~8 scenes |
 | `style_vibe` | `"a {style} outfit"` | ~8 styles |
 
-Then — **and this is the fix for Exposure 3** — do *not* take the argmax and embed the winning string.
-Store the **soft-label expectation embedding**:
+Then — **fixing Exposure 3** — do *not* take the argmax and embed the winning string; keep the graded
+softmax signal `p(v | region)`. *How* that signal is stored differs by axis type, and getting it right
+took one iteration:
 
-```
-p(v | region) = softmax_v ( CLIP_img(region) · CLIP_txt(prompt(v)) / τ )
+**Global axes (scene, style_vibe) — soft-label embedding.** Store the probability-weighted mean of the
+vocabulary's SBERT label embeddings, `normalize( Σ_v p(v|region) · SBERT(v) )`. Here semantic similarity
+is *wanted* — "office" should sit near "workplace", "formal" near "business" — so a sentence-encoder
+space is the right home.
 
-e_axis(image) = normalize( Σ_v  p(v | region) · SBERT(v) )
-```
+**Slot axes (category, color, pattern) — probability distribution.** I first stored these the same way
+(the SBERT expectation embedding). The swap test then exposed the key issue: **SBERT collapses
+semantically-similar values.** "red" and "white" sit only 0.63 apart — they're both colours — so a wrong
+colour scored almost as high as a right one and binding failed. The fix: store the **raw probability
+distribution over the axis vocabulary** as the vector, and match a query value as a one-hot over that
+same vocabulary. Now "red" vs "white" is 0.03, not 0.63 — the attribute *values are separated* instead of
+blended, which is exactly what an axis like colour needs. Out-of-vocabulary query words ("crimson")
+soft-map to their nearest vocabulary neighbours, keeping zero-shot resilience. (See `shared/axis_encoding.py`.)
 
-where `SBERT(·)` is the sentence encoder (`all-MiniLM-L6-v2`) applied to the label. At query time the
-query side is just `SBERT(extracted_phrase)`, and matching is plain cosine — so this drops straight
-into the same Qdrant named-vector machinery with zero extra storage and no extra model.
-
-Why it matters, concretely:
-
-- **v1:** a navy blazer at p=0.34 and a black blazer at p=0.33 collapse to *byte-identical* vectors.
-  Every "navy" query returns them tied, and a 0.15-weight visual term arbitrates. Ranking is noise.
-- **v2:** their vectors differ in proportion to the model's actual confidence. A query for "navy" ranks
-  the confidently-navy garment above the ambiguous one. The graded signal CLIP produced — and
-  which v1 computed, stored, and then ignored — is finally *used*.
-
-It also preserves paraphrase resilience for free: because the vector lives in sentence-encoder space,
-a "crimson" query still lands near a red-dominant distribution, and "workplace" near "office."
+Either way the graded signal is preserved: a navy blazer at p=0.34 and a black one at p=0.33 no longer
+collapse to identical vectors — the confidently-navy garment ranks above the ambiguous one for a "navy"
+query. The signal CLIP produced, which v1 computed and then ignored, is finally *used*.
 
 ### 3.4 Color: derived from pixels, because the dataset has none
 
@@ -270,8 +287,9 @@ threshold from nowhere. Both are now pinned down:
 - **Mechanism.** **BLIP-VQA on the region crop**, not free-form captioning: ask
   `"What color is this garment?"` / `"What type of garment is this?"` and constrain decoding to the
   axis vocabulary, with an escape hatch for genuinely out-of-vocab answers ("chartreuse"), whose raw
-  string is embedded with SBERT directly. That escape hatch is what preserves **zero-shot capability
-  beyond the fixed label set** — the assignment's fourth grading criterion.
+  string is **soft-mapped onto the axis vocabulary** via SBERT similarity (so "chartreuse" lands mostly
+  on green/yellow). That escape hatch is what preserves **zero-shot capability beyond the fixed label
+  set** — the assignment's fourth grading criterion.
 
 ### 3.6 Storage
 
@@ -337,12 +355,15 @@ solve the assignment problem between query garment constraints and the image's s
 Build a cost matrix between the *q* query garment constraints and the *m* slots of a candidate image:
 
 ```
-M[i][j] = mean over specified attrs a of  cos( SBERT(q_i.a),  e_a(slot_j) )
+M[i][j] = geometric mean over specified attrs a of  cos( qvec_a(q_i.a),  e_a(slot_j) )
 ```
 
-(attributes the query left `null` simply don't enter the mean — the zero-weight rule, applied *inside*
-a slot). Solve with **Hungarian assignment** (`scipy.optimize.linear_sum_assignment`; *q* ≤ 5, *m* ≤ 10,
-so cost is negligible). Final score:
+(For the slot axes `qvec_a` is a one-hot over the axis vocabulary and `e_a(slot)` its stored probability
+distribution — §3.3; category uses a soft one-hot so near-synonyms match. Attributes the query left
+`null` don't enter the product — the zero-weight rule, applied *inside* a slot. **Geometric** mean, not
+arithmetic: a garment must match category **and** colour, so a red *dress* can't half-satisfy "red tie".)
+Solve with **Hungarian assignment** (`scipy.optimize.linear_sum_assignment`; *q* ≤ 5, *m* ≤ 10, so cost
+is negligible). Final score:
 
 ```
 score(image) =  w_g · (mean of matched slot scores)          # bound garment attributes
@@ -384,7 +405,7 @@ with both, which would quietly reintroduce the bag-of-words failure through the 
 repo/
 ├── indexer/
 │   ├── detect_regions.py     # garment detection/segmentation → slots (detector | GT-mask oracle)
-│   ├── extract_attributes.py # per-slot & per-axis CLIP soft-label embeddings + pixel color + VQA fallback
+│   ├── extract_attributes.py # per-slot & per-axis attribute distributions + pixel color + VQA fallback
 │   ├── vocab.py              # per-axis prompt banks / label lists
 │   ├── build_index.py        # writes slot + image points into Qdrant
 │   └── config.yaml           # thresholds, λ, weights, model names
@@ -419,7 +440,7 @@ what converts the whole project from a plausible design into a demonstrated resu
 | Vanilla CLIP ViT-B/32, cosine on pooled embeddings | The baseline the assignment names |
 | FashionCLIP (fashion-domain CLIP) | *Is a domain-tuned backbone all you actually needed?* An honest, and genuinely uncomfortable, question worth answering |
 | **ADR-global** — v1 as written: global axes, hard labels | The cost of *not* grounding, and of hard labels |
-| **G-ADR** — v2: grounded slots, soft labels, Hungarian | The full system |
+| **G-ADR** — v2: grounded slots, distribution axes, Hungarian | The full system |
 | G-ADR + GT masks (oracle) | The price of detector error (§3.2) |
 
 **Relevance set.** ~25–30 queries spanning the five assignment archetypes. Pool the top-20 from every

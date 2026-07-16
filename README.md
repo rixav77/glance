@@ -13,6 +13,25 @@ CLIP and FashionCLIP sit near chance (see `eval/`).
 
 ---
 
+## Design evolution (my own iterations)
+
+This design is the result of iterating on my own earlier attempts — the full ladder, tradeoffs, and
+why each was rejected are in [`docs/APPROACHES.md`](docs/APPROACHES.md):
+
+1. **Naive tries** — vanilla CLIP, a fashion-tuned CLIP, and caption-and-match. All pool into one
+   vector → bag-of-words → fail the compositional case.
+2. **v1 — ADR-global (my first real architecture)** — decompose the image into *global* per-axis
+   labels (`{color, garment, scene}`, one each per image). Better on single-attribute/scene queries,
+   but storing colour *globally* means it still can't say *which* garment is blue — so it fails the
+   swap just like CLIP.
+3. **v2 — G-ADR (this repo)** — the fix is one idea: measure each attribute from its **own garment's
+   region**, so binding is structural. This is what takes the swap test from chance to 100%.
+
+The `v1 → v2` shortcomings-and-fixes analysis (what my own testing exposed in ADR-global) is the
+opening of [`fashion.md`](fashion.md).
+
+---
+
 ## Architecture (two decoupled pipelines over a shared contract)
 
 ```

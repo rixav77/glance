@@ -6,7 +6,7 @@ Maps every item the assignment (§5–6) asks for to where it lives in this repo
 |---|---|---|
 | 1 | **Approaches + tradeoffs** ("what's good and when") | [`docs/APPROACHES.md`](APPROACHES.md) — the 6-rung ladder (vanilla → region-grounding), with measured vs by-construction results |
 | 2 | **Chosen-approach writeup** (architecture, how it handles fashion) | [`../fashion.md`](../fashion.md) — full design doc |
-| 2b | **Old / tried ideas** | `fashion.md` opening **v1→v2 exposure table** — five things the v1 draft (ADR-global, see `docs/APPROACHES.md` Approach 3) asserted but didn't deliver |
+| 2b | **Old / tried ideas** (my own iterations) | `docs/APPROACHES.md` — my full progression: naive tries (0–2) → **my v1, ADR-global** (Approach 3) → **my final, G-ADR** (Approach 4). `fashion.md`'s opening then walks the five shortcomings my own testing exposed in v1 and how v2 fixes each. |
 | 3 | **Codebase** (clean, modular, logic separated from data) | `shared/` `indexer/` `retriever/` `eval/`; all thresholds/weights/models in `*/config.yaml`; single source of truth in `shared/schema.py` |
 | 4a | **Future work: locations & weather** | `fashion.md` §8a — add `weather`/`location_city` as global axes; no architectural change |
 | 4b | **Future work: improve precision** | `fashion.md` §8b — LoRA binding, learned axis weights, cross-encoder rerank, detector fine-tune |

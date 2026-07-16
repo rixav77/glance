@@ -4,8 +4,16 @@
 
 The problem is fixed by the assignment's own hint: **CLIP cannot bind attributes to the
 garments they modify** — it cannot tell *"red tie + white shirt"* from *"white tie + red
-shirt"*. There is a ladder of ways to attack that, each buying more binding power at more
-cost. We order them cheapest-to-heaviest, because that is how the decision was actually reasoned.
+shirt"*. This document is the actual path I explored, cheapest-to-heaviest, and it maps to my
+own iterations, not an abstract survey:
+
+- **Approaches 0–2 = my naive first tries** (vanilla CLIP, a fashion-tuned CLIP, caption-and-match).
+  I ruled all three out because they pool into one vector and fail the compositional case.
+- **Approach 3 = my v1** (ADR-global) — my first real architecture. It looked like it solved
+  compositionality, and my own testing showed it didn't.
+- **Approach 4 = where I landed** (G-ADR, this repo) — region-grounding, the one change that makes
+  binding real.
+- **Approach 5 = future work** (training the binding into the weights).
 
 Two of the numbers below are **measured** on our 1,259-pair compositional swap test
 (`eval/baselines.py`, `eval/swap_test.py`); the rest are **by construction** — reasoned from
@@ -41,7 +49,7 @@ Caption each image (BLIP) or expand the query (LLM), then match text-to-text.
   the same bag-of-words failure, relocated from the image encoder to the text encoder. Also brittle:
   the caption may never mention the colour at all. **[by construction]**
 
-## Approach 3 — Attribute decomposition, but GLOBAL (our own v1 draft)
+## Approach 3 — Attribute decomposition, but GLOBAL — **my v1** (ADR-global, my first real architecture)
 
 Classify the whole image on separate axes and store **one label/vector per axis per image**:
 `{color: blue, garment: shirt, scene: office}`.
