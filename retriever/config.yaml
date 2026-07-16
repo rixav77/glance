@@ -1,0 +1,29 @@
+# Retriever configuration. Weights and model names -- data, not code.
+
+models:
+  clip: openai/clip-vit-base-patch32          # must match the indexer's CLIP
+  sbert: sentence-transformers/all-MiniLM-L6-v2
+  parser_llm: Qwen/Qwen3-4B-Instruct-2507     # already cached; set use_llm=false to skip
+
+qdrant:
+  path: ./data/qdrant
+  slot_collection: glance_slots
+  image_collection: glance_images
+
+search:
+  per_axis_k: 80        # stage-1 ANN neighbours per query axis before union
+  default_k: 10
+
+# Score weights (fashion.md sec.4.3). garment binding is the PRIMARY signal; scene and
+# vibe are CONTEXT (their sum < garment), so when a query names garments they decide the
+# ranking and scene only breaks ties -- an office photo without the requested garment can
+# no longer outrank one that has it. Scaling scene/vibe down is safe for garment-free
+# queries (Q2/Q4): with no garment competing, a global scale leaves their ranking intact.
+# visual_global is a small tie-breaker. match_floor: a per-garment sim below this is a miss.
+weights:
+  garment: 1.0
+  scene: 0.35
+  vibe: 0.25
+  visual: 0.15
+  miss_penalty: 0.5
+  match_floor: 0.12

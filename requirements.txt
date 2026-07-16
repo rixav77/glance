@@ -1,0 +1,23 @@
+# Glance — Grounded Axis-Decomposed Retrieval
+# Python 3.11. Install:  pip install -r requirements.txt
+# (a CUDA GPU is used for indexing and the LLM parser; CPU works for search/eval)
+
+# --- core ML ---
+torch>=2.4                       # any recent build; tested on 2.10 + CUDA 12.8
+transformers>=4.46               # CLIP, SegFormer, BLIP-VQA, Qwen3 parser
+sentence-transformers>=3.0       # MiniLM axis-label embeddings
+
+# --- vector store (local on-disk mode; no server needed) ---
+qdrant-client>=1.10
+
+# --- attribute extraction ---
+scikit-image>=0.24               # CIELAB pixel-colour histogram
+scipy>=1.11                      # Hungarian assignment (linear_sum_assignment)
+numpy>=1.26
+pillow>=10.0
+
+# --- data / config ---
+pyyaml>=6.0
+pycocotools>=2.0.7               # Fashionpedia + COCO mask/annotation decoding
+requests>=2.31                   # COCO supplement image download
+huggingface-hub>=0.24            # model cache scan (optional)

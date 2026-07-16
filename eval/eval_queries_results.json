@@ -1,0 +1,686 @@
+[
+  {
+    "query": "A person in a bright yellow raincoat",
+    "parsed": {
+      "garments": [
+        {
+          "category": "raincoat",
+          "color": "yellow"
+        }
+      ],
+      "scene": null,
+      "style_vibe": null
+    },
+    "results": [
+      {
+        "rank": 1,
+        "image_path": "/home/shivank_g/projects/ml4psi/Glance/data/supplement/coco_000000563270.jpg",
+        "source": "coco_supplement",
+        "score": 0.5031,
+        "scene_label": "office",
+        "breakdown": {
+          "garment": 0.476,
+          "visual": 0.027
+        },
+        "matches": [
+          {
+            "query_garment": {
+              "category": "raincoat",
+              "color": "yellow"
+            },
+            "slot_label": {
+              "category": "raincoat",
+              "color": "brown",
+              "pattern": "graphic print"
+            },
+            "slot_score": 0.476,
+            "bbox": [
+              391,
+              151,
+              244,
+              300
+            ]
+          }
+        ]
+      },
+      {
+        "rank": 2,
+        "image_path": "/home/shivank_g/projects/ml4psi/Glance/data/test/15e1718954473a29738aa932ba31719c.jpg",
+        "source": "fashionpedia",
+        "score": 0.4509,
+        "scene_label": "runway",
+        "breakdown": {
+          "garment": 0.415,
+          "visual": 0.036
+        },
+        "matches": [
+          {
+            "query_garment": {
+              "category": "raincoat",
+              "color": "yellow"
+            },
+            "slot_label": {
+              "category": "jumpsuit",
+              "color": "yellow",
+              "pattern": "plain"
+            },
+            "slot_score": 0.415,
+            "bbox": [
+              268,
+              298,
+              157,
+              302
+            ]
+          }
+        ]
+      },
+      {
+        "rank": 3,
+        "image_path": "/home/shivank_g/projects/ml4psi/Glance/data/test/96b202445bdc16ebc3e93ae5788ed63e.jpg",
+        "source": "fashionpedia",
+        "score": 0.4027,
+        "scene_label": "urban street",
+        "breakdown": {
+          "garment": 0.372,
+          "visual": 0.031
+        },
+        "matches": [
+          {
+            "query_garment": {
+              "category": "raincoat",
+              "color": "yellow"
+            },
+            "slot_label": {
+              "category": "raincoat",
+              "color": "black",
+              "pattern": "graphic print"
+            },
+            "slot_score": 0.372,
+            "bbox": [
+              182,
+              230,
+              297,
+              241
+            ]
+          }
+        ]
+      },
+      {
+        "rank": 4,
+        "image_path": "/home/shivank_g/projects/ml4psi/Glance/data/test/ed25ee9ad312276a593ad8bd4c7cb66c.jpg",
+        "source": "fashionpedia",
+        "score": 0.3592,
+        "scene_label": "runway",
+        "breakdown": {
+          "garment": 0.326,
+          "visual": 0.034
+        },
+        "matches": [
+          {
+            "query_garment": {
+              "category": "raincoat",
+              "color": "yellow"
+            },
+            "slot_label": {
+              "category": "coat",
+              "color": "multicolored",
+              "pattern": "paisley"
+            },
+            "slot_score": 0.326,
+            "bbox": [
+              232,
+              210,
+              212,
+              395
+            ]
+          }
+        ]
+      },
+      {
+        "rank": 5,
+        "image_path": "/home/shivank_g/projects/ml4psi/Glance/data/supplement/coco_000000536027.jpg",
+        "source": "coco_supplement",
+        "score": 0.3246,
+        "scene_label": "urban street",
+        "breakdown": {
+          "garment": 0.284,
+          "visual": 0.04
+        },
+        "matches": [
+          {
+            "query_garment": {
+              "category": "raincoat",
+              "color": "yellow"
+            },
+            "slot_label": {
+              "category": "raincoat",
+              "color": "brown",
+              "pattern": "abstract"
+            },
+            "slot_score": 0.284,
+            "bbox": [
+              135,
+              7,
+              159,
+              180
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "query": "Professional business attire inside a modern office",
+    "parsed": {
+      "garments": [],
+      "scene": "office",
+      "style_vibe": "business professional"
+    },
+    "results": [
+      {
+        "rank": 1,
+        "image_path": "/home/shivank_g/projects/ml4psi/Glance/data/supplement/coco_000000545226.jpg",
+        "source": "coco_supplement",
+        "score": 0.642,
+        "scene_label": "office",
+        "breakdown": {
+          "garment": 0.0,
+          "scene": 0.35,
+          "vibe": 0.25,
+          "visual": 0.042
+        },
+        "matches": []
+      },
+      {
+        "rank": 2,
+        "image_path": "/home/shivank_g/projects/ml4psi/Glance/data/supplement/coco_000000315603.jpg",
+        "source": "coco_supplement",
+        "score": 0.6419,
+        "scene_label": "office",
+        "breakdown": {
+          "garment": 0.0,
+          "scene": 0.35,
+          "vibe": 0.25,
+          "visual": 0.042
+        },
+        "matches": []
+      },
+      {
+        "rank": 3,
+        "image_path": "/home/shivank_g/projects/ml4psi/Glance/data/supplement/coco_000000561630.jpg",
+        "source": "coco_supplement",
+        "score": 0.6411,
+        "scene_label": "office",
+        "breakdown": {
+          "garment": 0.0,
+          "scene": 0.35,
+          "vibe": 0.25,
+          "visual": 0.041
+        },
+        "matches": []
+      },
+      {
+        "rank": 4,
+        "image_path": "/home/shivank_g/projects/ml4psi/Glance/data/supplement/coco_000000035827.jpg",
+        "source": "coco_supplement",
+        "score": 0.6401,
+        "scene_label": "office",
+        "breakdown": {
+          "garment": 0.0,
+          "scene": 0.35,
+          "vibe": 0.248,
+          "visual": 0.042
+        },
+        "matches": []
+      },
+      {
+        "rank": 5,
+        "image_path": "/home/shivank_g/projects/ml4psi/Glance/data/supplement/coco_000000335189.jpg",
+        "source": "coco_supplement",
+        "score": 0.6385,
+        "scene_label": "office",
+        "breakdown": {
+          "garment": 0.0,
+          "scene": 0.35,
+          "vibe": 0.25,
+          "visual": 0.039
+        },
+        "matches": []
+      }
+    ]
+  },
+  {
+    "query": "Someone wearing a blue shirt sitting on a park bench",
+    "parsed": {
+      "garments": [
+        {
+          "category": "shirt",
+          "color": "blue"
+        }
+      ],
+      "scene": "park",
+      "style_vibe": null
+    },
+    "results": [
+      {
+        "rank": 1,
+        "image_path": "/home/shivank_g/projects/ml4psi/Glance/data/supplement/coco_000000262175.jpg",
+        "source": "coco_supplement",
+        "score": 0.8953,
+        "scene_label": "park",
+        "breakdown": {
+          "garment": 0.514,
+          "scene": 0.349,
+          "visual": 0.032
+        },
+        "matches": [
+          {
+            "query_garment": {
+              "category": "shirt",
+              "color": "blue"
+            },
+            "slot_label": {
+              "category": "tie",
+              "color": "blue",
+              "pattern": "camouflage"
+            },
+            "slot_score": 0.514,
+            "bbox": [
+              109,
+              396,
+              331,
+              244
+            ]
+          }
+        ]
+      },
+      {
+        "rank": 2,
+        "image_path": "/home/shivank_g/projects/ml4psi/Glance/data/supplement/coco_000000143554.jpg",
+        "source": "coco_supplement",
+        "score": 0.858,
+        "scene_label": "park",
+        "breakdown": {
+          "garment": 0.509,
+          "scene": 0.312,
+          "visual": 0.037
+        },
+        "matches": [
+          {
+            "query_garment": {
+              "category": "shirt",
+              "color": "blue"
+            },
+            "slot_label": {
+              "category": "top",
+              "color": "blue",
+              "pattern": "plain"
+            },
+            "slot_score": 0.509,
+            "bbox": [
+              77,
+              228,
+              282,
+              328
+            ]
+          }
+        ]
+      },
+      {
+        "rank": 3,
+        "image_path": "/home/shivank_g/projects/ml4psi/Glance/data/supplement/coco_000000396167.jpg",
+        "source": "coco_supplement",
+        "score": 0.8336,
+        "scene_label": "park",
+        "breakdown": {
+          "garment": 0.481,
+          "scene": 0.324,
+          "visual": 0.028
+        },
+        "matches": [
+          {
+            "query_garment": {
+              "category": "shirt",
+              "color": "blue"
+            },
+            "slot_label": {
+              "category": "top",
+              "color": "blue",
+              "pattern": "chevron"
+            },
+            "slot_score": 0.481,
+            "bbox": [
+              0,
+              96,
+              403,
+              175
+            ]
+          }
+        ]
+      },
+      {
+        "rank": 4,
+        "image_path": "/home/shivank_g/projects/ml4psi/Glance/data/supplement/coco_000000537710.jpg",
+        "source": "coco_supplement",
+        "score": 0.7953,
+        "scene_label": "park",
+        "breakdown": {
+          "garment": 0.411,
+          "scene": 0.35,
+          "visual": 0.035
+        },
+        "matches": [
+          {
+            "query_garment": {
+              "category": "shirt",
+              "color": "blue"
+            },
+            "slot_label": {
+              "category": "blouse",
+              "color": "navy",
+              "pattern": "plain"
+            },
+            "slot_score": 0.411,
+            "bbox": [
+              21,
+              318,
+              294,
+              57
+            ]
+          }
+        ]
+      },
+      {
+        "rank": 5,
+        "image_path": "/home/shivank_g/projects/ml4psi/Glance/data/test/b0ff6edc573ce8ec7e28b608c668a19d.jpg",
+        "source": "fashionpedia",
+        "score": 0.7516,
+        "scene_label": "park",
+        "breakdown": {
+          "garment": 0.397,
+          "scene": 0.32,
+          "visual": 0.035
+        },
+        "matches": [
+          {
+            "query_garment": {
+              "category": "shirt",
+              "color": "blue"
+            },
+            "slot_label": {
+              "category": "top",
+              "color": "navy",
+              "pattern": "striped"
+            },
+            "slot_score": 0.397,
+            "bbox": [
+              279,
+              458,
+              245,
+              267
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "query": "Casual weekend outfit for a city walk",
+    "parsed": {
+      "garments": [],
+      "scene": "urban street",
+      "style_vibe": "casual"
+    },
+    "results": [
+      {
+        "rank": 1,
+        "image_path": "/home/shivank_g/projects/ml4psi/Glance/data/test/70e000fc740fd51671f257453e5d4ef1.jpg",
+        "source": "fashionpedia",
+        "score": 0.6214,
+        "scene_label": "urban street",
+        "breakdown": {
+          "garment": 0.0,
+          "scene": 0.342,
+          "vibe": 0.24,
+          "visual": 0.039
+        },
+        "matches": []
+      },
+      {
+        "rank": 2,
+        "image_path": "/home/shivank_g/projects/ml4psi/Glance/data/supplement/coco_000000141334.jpg",
+        "source": "coco_supplement",
+        "score": 0.6121,
+        "scene_label": "urban street",
+        "breakdown": {
+          "garment": 0.0,
+          "scene": 0.35,
+          "vibe": 0.225,
+          "visual": 0.037
+        },
+        "matches": []
+      },
+      {
+        "rank": 3,
+        "image_path": "/home/shivank_g/projects/ml4psi/Glance/data/test/2e783ef225f6afd2c16ceac5482d955c.jpg",
+        "source": "fashionpedia",
+        "score": 0.6105,
+        "scene_label": "urban street",
+        "breakdown": {
+          "garment": 0.0,
+          "scene": 0.345,
+          "vibe": 0.231,
+          "visual": 0.035
+        },
+        "matches": []
+      },
+      {
+        "rank": 4,
+        "image_path": "/home/shivank_g/projects/ml4psi/Glance/data/supplement/coco_000000524436.jpg",
+        "source": "coco_supplement",
+        "score": 0.6079,
+        "scene_label": "urban street",
+        "breakdown": {
+          "garment": 0.0,
+          "scene": 0.349,
+          "vibe": 0.231,
+          "visual": 0.027
+        },
+        "matches": []
+      },
+      {
+        "rank": 5,
+        "image_path": "/home/shivank_g/projects/ml4psi/Glance/data/test/480a63a89fa67f75333ac3e2ec709fde.jpg",
+        "source": "fashionpedia",
+        "score": 0.6076,
+        "scene_label": "urban street",
+        "breakdown": {
+          "garment": 0.0,
+          "scene": 0.347,
+          "vibe": 0.229,
+          "visual": 0.031
+        },
+        "matches": []
+      }
+    ]
+  },
+  {
+    "query": "A red tie and a white shirt in a formal setting",
+    "parsed": {
+      "garments": [
+        {
+          "category": "tie",
+          "color": "red"
+        },
+        {
+          "category": "shirt",
+          "color": "white"
+        }
+      ],
+      "scene": null,
+      "style_vibe": "formal"
+    },
+    "results": [
+      {
+        "rank": 1,
+        "image_path": "/home/shivank_g/projects/ml4psi/Glance/data/supplement/coco_000000535898.jpg",
+        "source": "coco_supplement",
+        "score": 0.3591,
+        "scene_label": "urban street",
+        "breakdown": {
+          "garment": 0.186,
+          "vibe": 0.142,
+          "visual": 0.032
+        },
+        "matches": [
+          {
+            "query_garment": {
+              "category": "tie",
+              "color": "red"
+            },
+            "slot_label": {
+              "category": "tie",
+              "color": "red",
+              "pattern": "plain"
+            },
+            "slot_score": 0.871,
+            "bbox": [
+              247,
+              182,
+              200,
+              122
+            ]
+          }
+        ]
+      },
+      {
+        "rank": 2,
+        "image_path": "/home/shivank_g/projects/ml4psi/Glance/data/test/300dcfff954898e161a61e37fca960b8.jpg",
+        "source": "fashionpedia",
+        "score": 0.3445,
+        "scene_label": "runway",
+        "breakdown": {
+          "garment": 0.166,
+          "vibe": 0.143,
+          "visual": 0.035
+        },
+        "matches": [
+          {
+            "query_garment": {
+              "category": "tie",
+              "color": "red"
+            },
+            "slot_label": {
+              "category": "tie",
+              "color": "red",
+              "pattern": "plain"
+            },
+            "slot_score": 0.832,
+            "bbox": [
+              307,
+              230,
+              90,
+              358
+            ]
+          }
+        ]
+      },
+      {
+        "rank": 3,
+        "image_path": "/home/shivank_g/projects/ml4psi/Glance/data/supplement/coco_000000539897.jpg",
+        "source": "coco_supplement",
+        "score": 0.3312,
+        "scene_label": "urban street",
+        "breakdown": {
+          "garment": 0.114,
+          "vibe": 0.188,
+          "visual": 0.029
+        },
+        "matches": [
+          {
+            "query_garment": {
+              "category": "shirt",
+              "color": "white"
+            },
+            "slot_label": {
+              "category": "t-shirt",
+              "color": "white",
+              "pattern": "plain"
+            },
+            "slot_score": 0.729,
+            "bbox": [
+              0,
+              252,
+              115,
+              169
+            ]
+          }
+        ]
+      },
+      {
+        "rank": 4,
+        "image_path": "/home/shivank_g/projects/ml4psi/Glance/data/supplement/coco_000000134606.jpg",
+        "source": "coco_supplement",
+        "score": 0.2864,
+        "scene_label": "park",
+        "breakdown": {
+          "garment": 0.132,
+          "vibe": 0.127,
+          "visual": 0.027
+        },
+        "matches": [
+          {
+            "query_garment": {
+              "category": "shirt",
+              "color": "white"
+            },
+            "slot_label": {
+              "category": "t-shirt",
+              "color": "white",
+              "pattern": "plain"
+            },
+            "slot_score": 0.764,
+            "bbox": [
+              274,
+              200,
+              121,
+              160
+            ]
+          }
+        ]
+      },
+      {
+        "rank": 5,
+        "image_path": "/home/shivank_g/projects/ml4psi/Glance/data/supplement/coco_000000395214.jpg",
+        "source": "coco_supplement",
+        "score": 0.2826,
+        "scene_label": "urban street",
+        "breakdown": {
+          "garment": 0.124,
+          "vibe": 0.129,
+          "visual": 0.029
+        },
+        "matches": [
+          {
+            "query_garment": {
+              "category": "shirt",
+              "color": "white"
+            },
+            "slot_label": {
+              "category": "shirt",
+              "color": "white",
+              "pattern": "plain"
+            },
+            "slot_score": 0.749,
+            "bbox": [
+              214,
+              0,
+              120,
+              63
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]

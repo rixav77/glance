@@ -1,0 +1,44 @@
+# Indexer configuration. Every tunable lives here, not in the code.
+
+models:
+  clip: openai/clip-vit-base-patch32
+  sbert: sentence-transformers/all-MiniLM-L6-v2
+  vqa: Salesforce/blip-vqa-base          # fallback only; set to null to disable
+
+region_source:
+  # "segformer_clothes" = the detector that SHIPS (runs on any image, incl. the COCO
+  #   supplement, which has no garment annotations).
+  # "fashionpedia_gt"   = ORACLE. Fashionpedia only. Used to price detector error via
+  #   the GT-vs-detector ablation, never as the deployed system.
+  kind: segformer_clothes
+  min_area_frac: 0.005                   # drop specks; a 0.5%-of-image region has no colour
+
+extraction:
+  # Weight on CLIP for the COLOUR axis; (1 - lambda) goes to the mask-pixel histogram.
+  # Deliberately pixel-dominant: Fashionpedia has no colour GT (Phase 0, Finding 1) and
+  # CLIP is weak at colour, while masked Lab pixels are near-exact. CLIP is kept only
+  # because a Lab centroid cannot express "bright", "pastel", "neon".
+  color_lambda: 0.3
+
+  # Fire the VQA fallback when the axis distribution is UNINFORMATIVE, measured by
+  # normalised entropy (comparable across vocab sizes, unlike a raw top-1 score).
+  # TODO: calibrate on the hand-labelled slot set rather than trusting this default.
+  entropy_threshold: 0.85
+
+  # Axes allowed to use the VQA fallback. Colour only: the smoke test showed VQA helps
+  # on colour (out-of-vocab shades like "chartreuse") but returns junk on category and
+  # pattern, where CLIP/segmenter is already better. category never falls back -- the
+  # segmenter fixes its bucket. pattern is kept but noisy-by-nature and never queried
+  # in the eval set, so its noise is dormant.
+  fallback_axes: [color]
+
+  clip_temperature: 100.0
+
+qdrant:
+  path: ./data/qdrant                    # on-disk local mode: no Docker, no server
+  slot_collection: glance_slots
+  image_collection: glance_images
+  batch_size: 256
+
+corpus:
+  include: [fashionpedia, coco_supplement]

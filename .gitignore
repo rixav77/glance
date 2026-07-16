@@ -1,0 +1,30 @@
+# ---- data (1.5 GB — never commit; sourcing is documented in README) ----
+data/
+
+# ---- generated / large outputs (regenerable from code) ----
+# contact_sheet.html is 1.2 MB base64; regenerate with
+#   python eval/make_contact_sheet.py
+# it is also published as an Artifact (URL in README).
+eval/contact_sheet.html
+
+# ---- cluster logs ----
+*.log
+
+# ---- the company's assignment brief (their content, not mine to redistribute) ----
+Glance ML Internship Assignment.pdf
+
+# ---- python ----
+__pycache__/
+*.pyc
+*.pyo
+.ipynb_checkpoints/
+.venv/
+venv/
+
+# ---- editor / local ----
+.claude/settings.local.json
+.DS_Store
+
+# ---- personal/local: v1 draft + engineering log (kept on disk, not in repo) ----
+fashion.pdf
+tasks/
