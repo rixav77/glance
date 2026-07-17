@@ -54,4 +54,5 @@ def pair_descriptions(a, b):
             f"and a {lb['color']} {lb['category']}")
     swap = (f"a photo of a person wearing a {lb['color']} {la['category']} "
             f"and a {la['color']} {lb['category']}")
+    
     return true, swap
