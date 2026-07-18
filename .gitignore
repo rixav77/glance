@@ -28,3 +28,6 @@ venv/
 # ---- personal/local: v1 draft + engineering log (kept on disk, not in repo) ----
 fashion.pdf
 tasks/
+
+# ---- deliverables index: kept local, not in repo ----
+docs/DELIVERABLES.md
